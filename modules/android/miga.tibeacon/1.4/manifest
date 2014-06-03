@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.4
+apiversion: 2
+description: iBeacon
+author: Michael Gangolf
+license: Apache License, Version 2.0
+copyright: Copyright (c) 2014 Michael Gangolf
+
+
+# these should not be edited
+name: tibeacon
+moduleid: miga.tibeacon
+guid: 4c8aa9ac-fc28-4f7f-b3e7-446c56129597
+platform: android
+minsdk: 3.2.0.GA
