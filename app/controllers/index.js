@@ -123,7 +123,10 @@ var service = Ti.App.iOS.registerBackgroundService({
 });
 
 var init = function () {
-	socket.emit('messages::create', { foo: 'bar' });
+	socket.emit('messages::create', {
+		data: 'foobar'
+	}, {}, function(error, messages) {
+	});
 	$.win.open();
 };
 
