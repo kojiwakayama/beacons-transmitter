@@ -1,19 +1,18 @@
 var TiBeacons = require('org.beuckman.tibeacons'),
 	io = require('socket.io'),
-	uri = 'ws://127.0.01:8000',
+	uri = 'ws://10.6.112.133:8000',
 	socket = io.connect(uri);
 
 Ti.API.info("module is => " + TiBeacons);
 TiBeacons.enableAutoRanging();
+
 var iBeaconColletion = Alloy.Collections.iBeacon;
 iBeaconColletion.fetch();
 
 function enterRegion(e) {
-	alert(e);
 	var model = ensureModel(e);
 }
 function exitRegion(e) {
-	alert(e);
 	var model = ensureModel(e);
 	iBeaconColletion.remove(model);
 }
@@ -33,7 +32,9 @@ function ensureModel(e) {
 		uuid: e.uuid,
 		major: parseInt(e.major),
 		minor: parseInt(e.minor),
-		proximity: e.proximity
+		proximity: e.proximity,
+		rssi: e.rssi,
+		distance: e.accuracy
 	};
 	var model;
 	var models = iBeaconColletion.where({id:atts.id});
@@ -94,27 +95,15 @@ function toggleAdvertising() {
 
 function toggleMonitoring() {
     if ($.monitoringSwitch.value) {
-        TiBeacons.startMonitoringForRegion({
-            uuid : "00000000-0000-0000-0000-000000000000",
-            identifier : "Test Region 1"
-        });
-        TiBeacons.startMonitoringForRegion({
-            uuid : "00000000-0000-0000-0000-000000000001",
-            major: 1,
-            identifier : "Test Region 2"
-        });
-        TiBeacons.startMonitoringForRegion({
-            uuid : "00000000-0000-0000-0000-000000000002",
-            major: 1,
-            minor: 2,
-            identifier : "Test Region 3"
-        });
+
+				//All dev beacons from Estimote got the same uuid
         TiBeacons.startMonitoringForRegion({
             uuid : "B9407F30-F5F8-466E-AFF9-25556B57FE6D",
             identifier : "Estimote"
         });
+
     } else {
-		TiBeacons.stopMonitoringAllRegions();
+			TiBeacons.stopMonitoringAllRegions();
     }
 }
 
@@ -124,7 +113,7 @@ var service = Ti.App.iOS.registerBackgroundService({
 
 var init = function () {
 	socket.emit('messages::create', {
-		data: 'foobar'
+		data: 'init'
 	}, {}, function(error, messages) {
 	});
 	$.win.open();
