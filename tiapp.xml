@@ -49,9 +49,10 @@
 		<theme>default</theme>
 	</mobileweb>
 	<modules>
-    <module platform="android">miga.tibeacon</module>
     <module platform="iphone">org.beuckman.tibeacons</module>
+    <module platform="android">miga.tibeacon</module>
     <module platform="iphone">net.iamyellow.tiws</module>
+    <module platform="android">net.iamyellow.tiws</module>
   </modules>
 	<deployment-targets>
 		<target device="android">true</target>

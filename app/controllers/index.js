@@ -1,125 +1,200 @@
-var TiBeacons = require('org.beuckman.tibeacons'),
-	io = require('socket.io'),
-	uri = 'ws://10.6.112.133:8000',
-	socket = io.connect(uri);
+var io = require('socket.io'),
+    uri = 'ws://10.6.112.133:8000',
+    socket = io.connect(uri);
 
-Ti.API.info("module is => " + TiBeacons);
-TiBeacons.enableAutoRanging();
-
-var iBeaconColletion = Alloy.Collections.iBeacon;
-iBeaconColletion.fetch();
-
-function enterRegion(e) {
-	var model = ensureModel(e);
-}
-function exitRegion(e) {
-	var model = ensureModel(e);
-	iBeaconColletion.remove(model);
-}
-function updateRanges(e) {
-	Ti.API.trace(e);
-}
-function handleProximity(e) {
-	Ti.API.info(e);
-	var model = ensureModel(e);
-	model.set("proximity", e.proximity);
+function sendData(data) {
+  socket.emit('beacons::create', data, {}, function(error, beacons) {});
 }
 
-function ensureModel(e) {
-	var atts = {
-		id: e.uuid+" "+e.major+" "+e.minor,
-		identifier: e.identifier,
-		uuid: e.uuid,
-		major: parseInt(e.major),
-		minor: parseInt(e.minor),
-		proximity: e.proximity,
-		rssi: e.rssi,
-		distance: e.accuracy
-	};
-	var model;
-	var models = iBeaconColletion.where({id:atts.id});
+if (OS_IOS) {
+  var TiBeacons = require('org.beuckman.tibeacons');
+  TiBeacons.enableAutoRanging();
 
-	if (models.length === 0) {
-		model = Alloy.createModel("iBeacon", atts);
-		iBeaconColletion.add(model);
-	}
-	else {
-		model = models[0];
-		Ti.API.info("found model "+models[0].get("identifier"));
-	}
+  var iBeaconColletion = Alloy.Collections.iBeacon;
+  iBeaconColletion.fetch();
 
-	return model;
-}
+  function enterRegion(e) {
+    var data = {
+      event: 'enter-region',
+      timestamp: new Date().getTime(),
+      id: e.uuid+" "+e.major+" "+e.minor,
+      identifier: e.identifier,
+      uuid: e.uuid,
+      major: parseInt(e.major),
+      minor: parseInt(e.minor),
+      proximity: e.proximity,
+      rssi: e.rssi,
+      distance: e.accuracy
+    };
+    sendData(data);
+  }
 
-function addListeners() {
-	TiBeacons.addEventListener("enteredRegion", enterRegion);
-	TiBeacons.addEventListener("exitedRegion", exitRegion);
-	TiBeacons.addEventListener("beaconRanges", updateRanges);
-	TiBeacons.addEventListener("beaconProximity", handleProximity);
-}
-function removeListeners() {
-	TiBeacons.removeEventListener("enteredRegion", enterRegion);
-	TiBeacons.removeEventListener("exitedRegion", exitRegion);
-	TiBeacons.removeEventListener("beaconRanges", updateRanges);
-	TiBeacons.removeEventListener("beaconProximity", handleProximity);
-}
+  function exitRegion(e) {
+    var data = {
+      event: 'exit-region',
+      timestamp: new Date().getTime(),
+      id: e.uuid+" "+e.major+" "+e.minor,
+      identifier: e.identifier,
+      uuid: e.uuid,
+      major: parseInt(e.major),
+      minor: parseInt(e.minor),
+      proximity: e.proximity,
+      rssi: e.rssi,
+      distance: e.accuracy
+    };
+    sendData(data);
+  }
 
-function pauseApp() {
-	TiBeacons.stopMonitoringAllRegions();
-	TiBeacons.stopRangingForAllBeacons();
-	$.monitoringSwitch.value = false;
-	removeListeners();
-}
-function appResumed(e) {
-	addListeners();
-}
-Ti.App.addEventListener("pause", pauseApp);
-Ti.App.addEventListener("resumed", appResumed);
+  function updateRanges(e) {
+    var data = {
+      event: 'update-ranges',
+      timestamp: new Date().getTime(),
+      id: e.uuid+" "+e.major+" "+e.minor,
+      identifier: e.identifier,
+      uuid: e.uuid,
+      major: parseInt(e.major),
+      minor: parseInt(e.minor),
+      proximity: e.proximity,
+      rssi: e.rssi,
+      distance: e.accuracy
+    };
+    sendData(data);
+  }
 
-addListeners();
+  function handleProximity(e) {
+    var data = {
+      event: 'handle-proximity',
+      timestamp: new Date().getTime(),
+      id: e.uuid+" "+e.major+" "+e.minor,
+      identifier: e.identifier,
+      uuid: e.uuid,
+      major: parseInt(e.major),
+      minor: parseInt(e.minor),
+      proximity: e.proximity,
+      rssi: e.rssi,
+      distance: e.accuracy
+    };
+    sendData(data);
+  }
 
-function toggleAdvertising() {
-    if ($.advertisingSwitch.value) {
-        TiBeacons.startAdvertisingBeacon({
-            uuid : $.uuid.value,
-            identifier : "TiBeacon Test",
-            major: Math.abs(parseInt($.major.value)),
-            minor: Math.abs(parseInt($.minor.value))
-        });
-        Ti.App.idleTimerDisabled = true;
-    } else {
-        TiBeacons.stopAdvertisingBeacon();
-        Ti.App.idleTimerDisabled = false;
-    }
-}
+  function addListeners() {
+    TiBeacons.addEventListener("enteredRegion", enterRegion);
+    TiBeacons.addEventListener("exitedRegion", exitRegion);
+    TiBeacons.addEventListener("beaconRanges", updateRanges);
+    TiBeacons.addEventListener("beaconProximity", handleProximity);
+  }
+  function removeListeners() {
+    TiBeacons.removeEventListener("enteredRegion", enterRegion);
+    TiBeacons.removeEventListener("exitedRegion", exitRegion);
+    TiBeacons.removeEventListener("beaconRanges", updateRanges);
+    TiBeacons.removeEventListener("beaconProximity", handleProximity);
+  }
 
-function toggleMonitoring() {
+  function pauseApp() {
+    TiBeacons.stopMonitoringAllRegions();
+    TiBeacons.stopRangingForAllBeacons();
+    $.monitoringSwitch.value = false;
+    removeListeners();
+  }
+  function appResumed(e) {
+    addListeners();
+  }
+  Ti.App.addEventListener("pause", pauseApp);
+  Ti.App.addEventListener("resumed", appResumed);
+
+  addListeners();
+
+  function toggleMonitoring() {
     if ($.monitoringSwitch.value) {
-
-				//All dev beacons from Estimote got the same uuid
-        TiBeacons.startMonitoringForRegion({
-            uuid : "B9407F30-F5F8-466E-AFF9-25556B57FE6D",
-            identifier : "Estimote"
-        });
-
+      //All dev beacons from Estimote got the same uuid
+      TiBeacons.startMonitoringForRegion({
+        uuid : "B9407F30-F5F8-466E-AFF9-25556B57FE6D",
+        identifier : "Estimote"
+      });
     } else {
-			TiBeacons.stopMonitoringAllRegions();
+      TiBeacons.stopMonitoringAllRegions();
     }
+  }
 }
 
-var service = Ti.App.iOS.registerBackgroundService({
-    url: "bgService.js"
-});
+if (OS_ANDROID) {
+  var iBeacon = require('miga.tibeacon');
+
+  // register success Callback and set interval to 30sec
+  iBeacon.initBeacon({
+      success : onSuccess, error:onError, interval: 30, region: onRegion, found:onFound
+  });
+
+  function onSuccess(e){
+    e.devices.forEach(function(device) {
+        var data = {
+          event: 'on-success',
+          timestamp: new Date().getTime(),
+          id: device.uuid+"-"+device.major+"-"+device.minor,
+          identifier: device.mac,
+          uuid: device.uuid,
+          major: parseInt(device.major),
+          minor: parseInt(device.minor),
+          proximity: device.proximity,
+          rssi: device.rssi
+        };
+      sendData(data);
+    });
+  }
+
+  function onRegion(e){
+    var device = e.device,
+        data = {
+          event: 'on-region',
+          timestamp: new Date().getTime(),
+          id: device.uuid+"-"+device.major+"-"+device.minor,
+          identifier: device.mac,
+          uuid: device.uuid,
+          major: parseInt(device.major),
+          minor: parseInt(device.minor),
+          proximity: device.proximity,
+          rssi: device.rssi
+        };
+    sendData(data);
+  }
+
+  function onFound(e){
+    var device = e.device,
+        data = {
+          event: 'on-found',
+          timestamp: new Date().getTime(),
+          id: device.uuid+"-"+device.major+"-"+device.minor,
+          identifier: device.mac,
+          uuid: device.uuid,
+          major: parseInt(device.major),
+          minor: parseInt(device.minor),
+          proximity: device.proximity,
+          rssi: device.rssi
+        };
+    sendData(data);
+  }
+
+  function onError(e){
+    Ti.API.info(JSON.stringify(e));
+  }
+
+  function toggleMonitoring() {
+    if ($.monitoringSwitch.value) {
+      iBeacon.startScanning();
+      Ti.API.info('start');
+
+    } else {
+      iBeacon.stopScanning();
+      Ti.API.info('stop');
+    }
+  }
+}
 
 var init = function () {
-	socket.emit('messages::create', {
-		data: 'init'
-	}, {}, function(error, messages) {
-	});
-	$.win.open();
+  $.win.open();
 };
 
 socket.on('connect', function () {
-	Ti.API.log('connected!');
-	init();
+  Ti.API.log('connected!');
+  init();
 });
