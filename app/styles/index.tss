@@ -5,8 +5,21 @@
 
 "#inputContainer": {
 	layout: "horizontal",
-	backgroundColor: "#9de7d7",
-	height: "15%"
+	top: "5%",
+	height: "10%",
+	width: "auto"
+}
+
+"#urlPortLabel": {
+	left: "5%"
+}
+
+"#urlPortInput": {
+	width: "50%"
+}
+
+"#monitoringSwitch": {
+	left: "5%"
 }
 
 "Label": {
@@ -20,6 +33,7 @@
 "TextField": {
 	width: 100,
 	borderWidth: 1,
+	color: "#000000",
 	borderColor: "#333333",
 	backgroundColor: "#ffffff"
 }

@@ -2,8 +2,8 @@
   <Window id="win">
     <View id="mainContainer">
       <View id="inputContainer">
-        <Label>Api Url</Label>
-        <TextField id="apiUrlInput"/>
+        <Label id="urlPortLabel">Url:Port</Label>
+        <TextField id="urlPortInput"/>
         <Switch id="monitoringSwitch" value="false" onChange="toggleMonitoring"/>
       </View>
     </View>
