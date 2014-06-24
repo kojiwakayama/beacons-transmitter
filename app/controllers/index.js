@@ -2,18 +2,15 @@ var io = require('socket.io'),
     uri = 'ws://10.6.112.133:8000',
     socket = io.connect(uri);
 
-function sendData(data) {
+var sendData = function (data) {
   socket.emit('beacons::create', data, {}, function(error, beacons) {});
-}
+};
 
 if (OS_IOS) {
   var TiBeacons = require('org.beuckman.tibeacons');
   TiBeacons.enableAutoRanging();
 
-  var iBeaconColletion = Alloy.Collections.iBeacon;
-  iBeaconColletion.fetch();
-
-  function enterRegion(e) {
+  var enterRegion = function (e) {
     var data = {
       event: 'enter-region',
       timestamp: new Date().getTime(),
@@ -27,9 +24,9 @@ if (OS_IOS) {
       distance: e.accuracy
     };
     sendData(data);
-  }
+  };
 
-  function exitRegion(e) {
+  var exitRegion = function (e) {
     var data = {
       event: 'exit-region',
       timestamp: new Date().getTime(),
@@ -43,9 +40,9 @@ if (OS_IOS) {
       distance: e.accuracy
     };
     sendData(data);
-  }
+  };
 
-  function updateRanges(e) {
+  var updateRanges = function (e) {
     var data = {
       event: 'update-ranges',
       timestamp: new Date().getTime(),
@@ -59,9 +56,9 @@ if (OS_IOS) {
       distance: e.accuracy
     };
     sendData(data);
-  }
+  };
 
-  function handleProximity(e) {
+  var handleProximity = function (e) {
     var data = {
       event: 'handle-proximity',
       timestamp: new Date().getTime(),
@@ -75,36 +72,39 @@ if (OS_IOS) {
       distance: e.accuracy
     };
     sendData(data);
-  }
+  };
 
-  function addListeners() {
+  var addListeners = function () {
     TiBeacons.addEventListener("enteredRegion", enterRegion);
     TiBeacons.addEventListener("exitedRegion", exitRegion);
     TiBeacons.addEventListener("beaconRanges", updateRanges);
     TiBeacons.addEventListener("beaconProximity", handleProximity);
-  }
-  function removeListeners() {
+  };
+
+  var removeListeners = function () {
     TiBeacons.removeEventListener("enteredRegion", enterRegion);
     TiBeacons.removeEventListener("exitedRegion", exitRegion);
     TiBeacons.removeEventListener("beaconRanges", updateRanges);
     TiBeacons.removeEventListener("beaconProximity", handleProximity);
-  }
+  };
 
-  function pauseApp() {
+  var pauseApp = function () {
     TiBeacons.stopMonitoringAllRegions();
     TiBeacons.stopRangingForAllBeacons();
     $.monitoringSwitch.value = false;
     removeListeners();
-  }
-  function appResumed(e) {
+  };
+
+  var appResumed = function (e) {
     addListeners();
-  }
+  };
+
   Ti.App.addEventListener("pause", pauseApp);
   Ti.App.addEventListener("resumed", appResumed);
 
   addListeners();
 
-  function toggleMonitoring() {
+  var toggleMonitoring = function () {
     if ($.monitoringSwitch.value) {
       //All dev beacons from Estimote got the same uuid
       TiBeacons.startMonitoringForRegion({
@@ -114,7 +114,7 @@ if (OS_IOS) {
     } else {
       TiBeacons.stopMonitoringAllRegions();
     }
-  }
+  };
 }
 
 if (OS_ANDROID) {
@@ -125,7 +125,7 @@ if (OS_ANDROID) {
       success : onSuccess, error:onError, interval: 30, region: onRegion, found:onFound
   });
 
-  function onSuccess(e){
+  var onSuccess = function (e) {
     e.devices.forEach(function(device) {
         var data = {
           event: 'on-success',
@@ -140,9 +140,9 @@ if (OS_ANDROID) {
         };
       sendData(data);
     });
-  }
+  };
 
-  function onRegion(e){
+  var onRegion = function (e) {
     var device = e.device,
         data = {
           event: 'on-region',
@@ -156,9 +156,9 @@ if (OS_ANDROID) {
           rssi: device.rssi
         };
     sendData(data);
-  }
+  };
 
-  function onFound(e){
+  var onFound = function (e) {
     var device = e.device,
         data = {
           event: 'on-found',
@@ -172,13 +172,13 @@ if (OS_ANDROID) {
           rssi: device.rssi
         };
     sendData(data);
-  }
+  };
 
-  function onError(e){
+  var onError = function (e) {
     Ti.API.info(JSON.stringify(e));
-  }
+  };
 
-  function toggleMonitoring() {
+  var toggleMonitoring = function () {
     if ($.monitoringSwitch.value) {
       iBeacon.startScanning();
       Ti.API.info('start');
@@ -187,7 +187,7 @@ if (OS_ANDROID) {
       iBeacon.stopScanning();
       Ti.API.info('stop');
     }
-  }
+  };
 }
 
 var init = function () {
