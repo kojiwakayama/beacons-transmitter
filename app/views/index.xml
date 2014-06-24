@@ -1,8 +1,9 @@
 <Alloy>
   <Window id="win">
-    <View class="container">
-      <View layout="horizontal" height="35">
-        <Label>Monitoring</Label>
+    <View id="mainContainer">
+      <View id="inputContainer">
+        <Label>Api Url</Label>
+        <TextField id="apiUrlInput"/>
         <Switch id="monitoringSwitch" value="false" onChange="toggleMonitoring"/>
       </View>
     </View>

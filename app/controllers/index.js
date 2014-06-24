@@ -1,20 +1,20 @@
-var io = require('socket.io'),
-    uri = 'ws://10.6.112.133:8000',
-    socket = io.connect(uri);
+var io = require('socket.io');
+var socket;
 
 var sendData = function (data) {
+  Ti.API.info('sendData!');
+  Ti.API.info(data);
   socket.emit('beacons::create', data, {}, function(error, beacons) {});
 };
 
 if (OS_IOS) {
   var TiBeacons = require('org.beuckman.tibeacons');
-  TiBeacons.enableAutoRanging();
 
   var enterRegion = function (e) {
     var data = {
       event: 'enter-region',
       timestamp: new Date().getTime(),
-      id: e.uuid+" "+e.major+" "+e.minor,
+      id: e.uuid+"-"+e.major+"-"+e.minor,
       identifier: e.identifier,
       uuid: e.uuid,
       major: parseInt(e.major),
@@ -30,7 +30,7 @@ if (OS_IOS) {
     var data = {
       event: 'exit-region',
       timestamp: new Date().getTime(),
-      id: e.uuid+" "+e.major+" "+e.minor,
+      id: e.uuid+"-"+e.major+"-"+e.minor,
       identifier: e.identifier,
       uuid: e.uuid,
       major: parseInt(e.major),
@@ -43,26 +43,28 @@ if (OS_IOS) {
   };
 
   var updateRanges = function (e) {
-    var data = {
-      event: 'update-ranges',
-      timestamp: new Date().getTime(),
-      id: e.uuid+" "+e.major+" "+e.minor,
-      identifier: e.identifier,
-      uuid: e.uuid,
-      major: parseInt(e.major),
-      minor: parseInt(e.minor),
-      proximity: e.proximity,
-      rssi: e.rssi,
-      distance: e.accuracy
-    };
-    sendData(data);
+    e.beacons.forEach(function(device) {
+      var data = {
+        event: 'update-ranges',
+        timestamp: new Date().getTime(),
+        id: device.uuid+"-"+device.major+"-"+device.minor,
+        identifier: device.identifier,
+        uuid: device.uuid,
+        major: parseInt(device.major),
+        minor: parseInt(device.minor),
+        proximity: device.proximity,
+        rssi: device.rssi,
+        distance: device.accuracy
+      };
+      sendData(data);
+    });
   };
 
   var handleProximity = function (e) {
     var data = {
       event: 'handle-proximity',
       timestamp: new Date().getTime(),
-      id: e.uuid+" "+e.major+" "+e.minor,
+      id: e.uuid+"-"+e.major+"-"+e.minor,
       identifier: e.identifier,
       uuid: e.uuid,
       major: parseInt(e.major),
@@ -99,20 +101,35 @@ if (OS_IOS) {
     addListeners();
   };
 
+  addListeners();
   Ti.App.addEventListener("pause", pauseApp);
   Ti.App.addEventListener("resumed", appResumed);
 
-  addListeners();
+  TiBeacons.enableAutoRanging();
 
   var toggleMonitoring = function () {
     if ($.monitoringSwitch.value) {
-      //All dev beacons from Estimote got the same uuid
-      TiBeacons.startMonitoringForRegion({
-        uuid : "B9407F30-F5F8-466E-AFF9-25556B57FE6D",
-        identifier : "Estimote"
+      var uri = 'ws://10.6.112.133:8000';
+
+      socket = io.connect(uri);
+
+      socket.on('connect', function () {
+        Ti.API.log('connected!');
+
+        //All dev beacons from Estimote got the same uuid
+        TiBeacons.startMonitoringForRegion({
+          uuid : "B9407F30-F5F8-466E-AFF9-25556B57FE6D",
+          identifier : "Estimote"
+        });
+
+        Ti.API.info('start');
       });
     } else {
-      TiBeacons.stopMonitoringAllRegions();
+      socket.on('disconnect', function () {
+        TiBeacons.stopMonitoringAllRegions();
+        Ti.API.info('stop');
+      });
+      socket.disconnect();
     }
   };
 }
@@ -120,12 +137,9 @@ if (OS_IOS) {
 if (OS_ANDROID) {
   var iBeacon = require('miga.tibeacon');
 
-  // register success Callback and set interval to 30sec
-  iBeacon.initBeacon({
-      success : onSuccess, error:onError, interval: 30, region: onRegion, found:onFound
-  });
-
   var onSuccess = function (e) {
+    Ti.API.log('onSuccess!');
+
     e.devices.forEach(function(device) {
         var data = {
           event: 'on-success',
@@ -175,26 +189,37 @@ if (OS_ANDROID) {
   };
 
   var onError = function (e) {
+    Ti.API.log('onError!');
     Ti.API.info(JSON.stringify(e));
   };
 
+  // register success Callback and set interval to 10sec
+  iBeacon.initBeacon({
+      success : onSuccess, error:onError, interval: 10, region: onRegion, found:onFound
+  });
+
   var toggleMonitoring = function () {
     if ($.monitoringSwitch.value) {
-      iBeacon.startScanning();
-      Ti.API.info('start');
-
+      var uri = 'ws://10.6.112.133:8000';
+      socket = io.connect(uri);
+      socket.on('connect', function () {
+        Ti.API.log('connected!');
+        iBeacon.startScanning();
+        Ti.API.info('start');
+      });
     } else {
-      iBeacon.stopScanning();
-      Ti.API.info('stop');
+      socket.on('disconnect', function () {
+        iBeacon.stopScanning();
+        Ti.API.info('stop');
+      });
+      socket.disconnect();
     }
   };
 }
 
 var init = function () {
+  Ti.API.log('init!');
   $.win.open();
 };
 
-socket.on('connect', function () {
-  Ti.API.log('connected!');
-  init();
-});
+init();
