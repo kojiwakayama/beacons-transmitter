@@ -28,8 +28,8 @@ if (OS_IOS) {
       major: parseInt(e.major),
       minor: parseInt(e.minor),
       proximity: e.proximity,
-      rssi: e.rssi,
-      distance: e.accuracy
+      rssi: parseInt(e.rssi),
+      distance: parseFloat(e.accuracy)
     };
     sendBeacon(beacon);
   };
@@ -47,8 +47,8 @@ if (OS_IOS) {
       major: parseInt(e.major),
       minor: parseInt(e.minor),
       proximity: e.proximity,
-      rssi: e.rssi,
-      distance: e.accuracy
+      rssi: parseInt(e.rssi),
+      distance: parseFloat(e.accuracy)
     };
     sendBeacon(beacon);
   };
@@ -67,9 +67,9 @@ if (OS_IOS) {
         uuid: device.uuid,
         major: parseInt(device.major),
         minor: parseInt(device.minor),
-        proximity: device.proximity,
-        rssi: device.rssi,
-        distance: device.accuracy
+        proximity: e.proximity,
+        rssi: parseInt(e.rssi),
+        distance: parseFloat(e.accuracy)
       };
       sendBeacon(beacon);
       beaconsCollection.push(beacon);
@@ -101,8 +101,8 @@ if (OS_IOS) {
       major: parseInt(e.major),
       minor: parseInt(e.minor),
       proximity: e.proximity,
-      rssi: e.rssi,
-      distance: e.accuracy
+      rssi: parseInt(e.rssi),
+      distance: parseFloat(e.accuracy)
     };
     sendBeacon(beacon);
   };
@@ -184,7 +184,7 @@ if (OS_ANDROID) {
         uuid: device.uuid,
         major: parseInt(device.major),
         minor: parseInt(device.minor),
-        proximity: device.proximity,
+        distance: device.proximity,
         rssi: device.rssi
       };
       sendBeacon(beacon);
@@ -217,7 +217,7 @@ if (OS_ANDROID) {
           uuid: device.uuid,
           major: parseInt(device.major),
           minor: parseInt(device.minor),
-          proximity: device.proximity,
+          distance: device.proximity,
           rssi: device.rssi
         };
     sendBeacon(beacon);
@@ -236,7 +236,7 @@ if (OS_ANDROID) {
           uuid: device.uuid,
           major: parseInt(device.major),
           minor: parseInt(device.minor),
-          proximity: device.proximity,
+          distance: device.proximity,
           rssi: device.rssi
         };
     sendBeacon(beacon);
