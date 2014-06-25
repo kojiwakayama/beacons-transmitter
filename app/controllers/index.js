@@ -2,9 +2,14 @@ var io = require('socket.io');
 var socket;
 var transmitterTag;
 
-var sendData = function (data) {
-  Ti.API.info(data);
-  socket.emit('beacons::create', data, {}, function(error, beacons) {});
+var sendBeacon = function (beacon) {
+  Ti.API.info(beacon);
+  socket.emit('beacon::create', beacon, {}, function(error, beacon) {});
+};
+
+var sendRanges = function (ranges) {
+  Ti.API.info(ranges);
+  socket.emit('ranges::create', ranges, {}, function(error, ranges) {});
 };
 
 if (OS_IOS) {
@@ -13,7 +18,7 @@ if (OS_IOS) {
   var enterRegion = function (e) {
     var timestamp = new Date().getTime();
 
-    var data = {
+    var beacon = {
       tag: transmitterTag,
       event: 'enter-region',
       timestamp: timestamp,
@@ -26,13 +31,13 @@ if (OS_IOS) {
       rssi: e.rssi,
       distance: e.accuracy
     };
-    sendData(data);
+    sendBeacon(beacon);
   };
 
   var exitRegion = function (e) {
     var timestamp = new Date().getTime();
 
-    var data = {
+    var beacon = {
       tag: transmitterTag,
       event: 'exit-region',
       timestamp: timestamp,
@@ -45,13 +50,15 @@ if (OS_IOS) {
       rssi: e.rssi,
       distance: e.accuracy
     };
-    sendData(data);
+    sendBeacon(beacon);
   };
 
   var updateRanges = function (e) {
     var timestamp = new Date().getTime();
 
-    var data = {
+    // Todo: loop through beacons
+
+    var beacon = {
       tag: transmitterTag,
       event: 'update-ranges',
       timestamp: timestamp,
@@ -64,13 +71,21 @@ if (OS_IOS) {
       rssi: e.rssi,
       distance: e.accuracy
     };
-    sendData(data);
+    sendBeacon(beacon);
+
+    var ranges = {
+      event: 'update-ranges',
+      timestamp: timestamp,
+      tag: transmitterTag,
+      beacons: ['todo: add beacons']
+    };
+    sendRanges(ranges);
   };
 
   var handleProximity = function (e) {
     var timestamp = new Date().getTime();
 
-    var data = {
+    var beacon = {
       tag: transmitterTag,
       event: 'handle-proximity',
       timestamp: timestamp,
@@ -83,7 +98,7 @@ if (OS_IOS) {
       rssi: e.rssi,
       distance: e.accuracy
     };
-    sendData(data);
+    sendBeacon(beacon);
   };
 
   var addListeners = function () {
@@ -151,29 +166,43 @@ if (OS_ANDROID) {
 
   var onSuccess = function (e) {
     var timestamp = new Date().getTime();
+    var beaconsCollection = [];
 
     e.devices.forEach(function(device) {
-        var data = {
-          tag: transmitterTag,
-          event: 'on-success',
-          timestamp: timestamp,
-          id: device.uuid+"-"+device.major+"-"+device.minor,
-          identifier: device.mac,
-          uuid: device.uuid,
-          major: parseInt(device.major),
-          minor: parseInt(device.minor),
-          proximity: device.proximity,
-          rssi: device.rssi
-        };
-      sendData(data);
+      var beacon = {
+        tag: transmitterTag,
+        event: 'on-success',
+        timestamp: timestamp,
+        id: device.uuid+"-"+device.major+"-"+device.minor,
+        identifier: device.mac,
+        uuid: device.uuid,
+        major: parseInt(device.major),
+        minor: parseInt(device.minor),
+        proximity: device.proximity,
+        rssi: device.rssi
+      };
+      sendBeacon(beacon);
+      beaconsCollection.push(beacon);
     });
+
+    var ranges = {
+      event: 'on-success',
+      timestamp: timestamp,
+      tag: transmitterTag,
+      beacons: beaconsCollection
+    };
+
+    // Send only if beacons found
+    if (beaconsCollection.length) {
+      sendRanges(ranges);
+    }
   };
 
   var onRegion = function (e) {
     var timestamp = new Date().getTime();
 
     var device = e.device,
-        data = {
+        beacon = {
           tag: transmitterTag,
           event: 'on-region',
           timestamp: timestamp,
@@ -185,14 +214,14 @@ if (OS_ANDROID) {
           proximity: device.proximity,
           rssi: device.rssi
         };
-    sendData(data);
+    sendBeacon(beacon);
   };
 
   var onFound = function (e) {
     var timestamp = new Date().getTime();
 
     var device = e.device,
-        data = {
+        beacon = {
           tag: transmitterTag,
           event: 'on-found',
           timestamp: timestamp,
@@ -204,7 +233,7 @@ if (OS_ANDROID) {
           proximity: device.proximity,
           rssi: device.rssi
         };
-    sendData(data);
+    sendBeacon(beacon);
   };
 
   var onError = function (e) {
