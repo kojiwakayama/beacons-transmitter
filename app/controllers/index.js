@@ -86,37 +86,6 @@ if (OS_IOS) {
     if (beaconsCollection.length) {
       sendRanges(ranges);
     }
-
-
-
-
-
-
-
-    // Todo: loop through beacons
-
-    var beacon = {
-      tag: transmitterTag,
-      event: 'update-ranges',
-      timestamp: timestamp,
-      id: e.uuid+"-"+e.major+"-"+e.minor,
-      identifier: e.identifier,
-      uuid: e.uuid,
-      major: parseInt(e.major),
-      minor: parseInt(e.minor),
-      proximity: e.proximity,
-      rssi: e.rssi,
-      distance: e.accuracy
-    };
-    sendBeacon(beacon);
-
-    var ranges = {
-      event: 'update-ranges',
-      timestamp: timestamp,
-      tag: transmitterTag,
-      beacons: ['todo: add beacons']
-    };
-    sendRanges(ranges);
   };
 
   var handleProximity = function (e) {
