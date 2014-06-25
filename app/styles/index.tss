@@ -3,19 +3,37 @@
 	layout: "vertical"
 }
 
-"#inputContainer": {
-	layout: "horizontal",
-	top: "5%",
-	height: "10%",
-	width: "auto"
-}
-
-"#urlPortLabel": {
+"#title": {
+	top: "10%",
 	left: "5%"
 }
 
+".inputContainer": {
+	layout: "horizontal",
+	top: "5%",
+	height: "10%"
+}
+
+"#transmitterTagLabel": {
+	left: "5%",
+	width: "30%"
+}
+
+"#transmitterTagInput": {
+	width: "50%",
+	backgroundColor:"#ffffff",
+	backgroundFocusedColor: "#6ffcdb"
+}
+
+"#urlPortLabel": {
+	left: "5%",
+	width: "30%"
+}
+
 "#urlPortInput": {
-	width: "50%"
+	width: "50%",
+	backgroundColor:"#ffffff",
+	backgroundFocusedColor: "#ad44f5"
 }
 
 "#monitoringSwitch": {

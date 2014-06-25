@@ -1,6 +1,6 @@
 var io = require('socket.io');
 var socket;
-var transmitterTag = '';
+var transmitterTag;
 
 var sendData = function (data) {
   Ti.API.info(data);
@@ -120,6 +120,7 @@ if (OS_IOS) {
 
     if ($.monitoringSwitch.value) {
       var uri = 'ws://' + $.urlPortInput.value;
+      transmitterTag = $.transmitterTagInput.value;
 
       socket = io.connect(uri);
       socket.on('connect', function () {
@@ -212,6 +213,7 @@ if (OS_ANDROID) {
 
     if ($.monitoringSwitch.value) {
      var uri = 'ws://' + $.urlPortInput.value;
+     transmitterTag = $.transmitterTagInput.value;
 
       socket = io.connect(uri);
       socket.on('connect', function () {

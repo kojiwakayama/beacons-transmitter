@@ -1,10 +1,17 @@
 <Alloy>
   <Window id="win">
     <View id="mainContainer">
-      <View id="inputContainer">
+    <Label id="title" text="Beacons Transmitter"/>
+      <View class="inputContainer">
+      	<Label id="transmitterTagLabel">Tag</Label>
+      	<TextField id="transmitterTagInput" hintText="e.g. transmitter id"/>
+      </View>
+      <View class="inputContainer">
         <Label id="urlPortLabel">Url:Port</Label>
-        <TextField id="urlPortInput"/>
-        <Switch id="monitoringSwitch" value="false" onChange="toggleMonitoring"/>
+        <TextField id="urlPortInput" hintText="e.g. 127.0.0.1:8000"/>
+      </View>
+      <View class="inputContainer">
+      	<Switch id="monitoringSwitch" value="false" onChange="toggleMonitoring"/>
       </View>
     </View>
   </Window>
