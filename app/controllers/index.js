@@ -55,6 +55,43 @@ if (OS_IOS) {
 
   var updateRanges = function (e) {
     var timestamp = new Date().getTime();
+    var beaconsCollection = [];
+
+    e.beacons.forEach(function(device) {
+      var beacon = {
+        tag: transmitterTag,
+        event: 'update-ranges',
+        timestamp: timestamp,
+        id: device.uuid+"-"+device.major+"-"+device.minor,
+        identifier: device.identifier,
+        uuid: device.uuid,
+        major: parseInt(device.major),
+        minor: parseInt(device.minor),
+        proximity: device.proximity,
+        rssi: device.rssi,
+        distance: device.accuracy
+      };
+      sendBeacon(beacon);
+      beaconsCollection.push(beacon);
+    });
+
+    var ranges = {
+      event: 'on-success',
+      timestamp: timestamp,
+      tag: transmitterTag,
+      beacons: beaconsCollection
+    };
+
+    // Send only if beacons found
+    if (beaconsCollection.length) {
+      sendRanges(ranges);
+    }
+
+
+
+
+
+
 
     // Todo: loop through beacons
 
