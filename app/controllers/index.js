@@ -76,7 +76,7 @@ if (OS_IOS) {
     });
 
     var ranges = {
-      event: 'on-success',
+      event: 'on-ranges',
       timestamp: timestamp,
       tag: transmitterTag,
       beacons: beaconsCollection
