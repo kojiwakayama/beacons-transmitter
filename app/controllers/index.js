@@ -1,5 +1,6 @@
 var io = require('socket.io');
 var socket;
+var transmitterTag = '';
 
 var sendData = function (data) {
   Ti.API.info(data);
@@ -11,6 +12,7 @@ if (OS_IOS) {
 
   var enterRegion = function (e) {
     var data = {
+      tag: transmitterTag,
       event: 'enter-region',
       timestamp: new Date().getTime(),
       id: e.uuid+"-"+e.major+"-"+e.minor,
@@ -27,6 +29,7 @@ if (OS_IOS) {
 
   var exitRegion = function (e) {
     var data = {
+      tag: transmitterTag,
       event: 'exit-region',
       timestamp: new Date().getTime(),
       id: e.uuid+"-"+e.major+"-"+e.minor,
@@ -43,6 +46,7 @@ if (OS_IOS) {
 
   var updateRanges = function (e) {
     var data = {
+      tag: transmitterTag,
       event: 'update-ranges',
       timestamp: new Date().getTime(),
       id: e.uuid+"-"+e.major+"-"+e.minor,
@@ -59,6 +63,7 @@ if (OS_IOS) {
 
   var handleProximity = function (e) {
     var data = {
+      tag: transmitterTag,
       event: 'handle-proximity',
       timestamp: new Date().getTime(),
       id: e.uuid+"-"+e.major+"-"+e.minor,
@@ -138,6 +143,7 @@ if (OS_ANDROID) {
   var onSuccess = function (e) {
     e.devices.forEach(function(device) {
         var data = {
+          tag: transmitterTag,
           event: 'on-success',
           timestamp: new Date().getTime(),
           id: device.uuid+"-"+device.major+"-"+device.minor,
@@ -155,6 +161,7 @@ if (OS_ANDROID) {
   var onRegion = function (e) {
     var device = e.device,
         data = {
+          tag: transmitterTag,
           event: 'on-region',
           timestamp: new Date().getTime(),
           id: device.uuid+"-"+device.major+"-"+device.minor,
@@ -171,6 +178,7 @@ if (OS_ANDROID) {
   var onFound = function (e) {
     var device = e.device,
         data = {
+          tag: transmitterTag,
           event: 'on-found',
           timestamp: new Date().getTime(),
           id: device.uuid+"-"+device.major+"-"+device.minor,
