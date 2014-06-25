@@ -1,6 +1,6 @@
 # beacons-transmitter
 
-Mobile app for iOS and Android to transmit beacons data to [beacons-api](https://github.com/kojiwakayama/beacons-api) over websockets.
+Mobile app for iOS and Android to transmit beacons data to [beacons-api](https://github.com/kojiwakayama/beacons-api) over WebSockets.
 
 ## Features
 * [Titanium](http://www.appcelerator.com/titanium/)
