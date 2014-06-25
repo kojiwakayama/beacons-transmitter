@@ -1,21 +1,22 @@
-beacons-transmitter
-===================
+# beacons-transmitter
 
-##Features
+Mobile app for iOS and Android to transmit beacons data to [beacons-api](https://github.com/kojiwakayama/beacons-api) over websockets.
+
+## Features
 * [Titanium](http://www.appcelerator.com/titanium/)
 * [TiBeacons](https://github.com/jbeuckm/TiBeacons)
 * [tibeacon](https://github.com/m1ga/tibeacon)
 * [tiws](https://github.com/iamyellow/tiws)
 
-##Getting Started
+## Getting started
 ```
-#Install titanium and alloy
+# Install titanium and alloy
 npm install -g titanium && npm install -g  alloy
 
 # Install titanium sdk
 titanium sdk install
 
-# Cd to project folder
+# Cd into project folder
 $ cd beacons-transmitter
 
 # Build and run in emulator
@@ -25,21 +26,21 @@ $ titanium build [-p plattform]
 
 # Or build and run on device
 $ titanium build [-p plattform] -T device
-#ti build -p ios -T device
-#ti build -p android -T device
+# ti build -p ios -T device
+# ti build -p android -T device
 ```
 
 ## Dependencies
 * [Node.js](http://nodejs.org/)
 
-##Requirements
-[Register titanium account](https://my.appcelerator.com/auth/signup)
+## Beacons api
+see [beacons-api](https://github.com/kojiwakayama/beacons-api)
 
-##Author
+## Author
 Koji Wakayama
 
-##Contributors
+## Contributors
 Johan Lauri
 
 ## License
-* [MIT](http://opensource.org/licenses/MIT)
+[MIT](http://opensource.org/licenses/MIT)
