@@ -28,8 +28,8 @@ if (OS_IOS) {
       major: parseInt(e.major),
       minor: parseInt(e.minor),
       proximity: e.proximity,
-      rssi: e.rssi,
-      distance: e.accuracy
+      rssi: parseInt(e.rssi),
+      distance: parseFloat(e.accuracy)
     };
     sendBeacon(beacon);
   };
@@ -47,8 +47,8 @@ if (OS_IOS) {
       major: parseInt(e.major),
       minor: parseInt(e.minor),
       proximity: e.proximity,
-      rssi: e.rssi,
-      distance: e.accuracy
+      rssi: parseInt(e.rssi),
+      distance: parseFloat(e.accuracy)
     };
     sendBeacon(beacon);
   };
@@ -67,9 +67,9 @@ if (OS_IOS) {
         uuid: device.uuid,
         major: parseInt(device.major),
         minor: parseInt(device.minor),
-        proximity: e.proximity,
-        rssi: e.rssi,
-        distance: e.accuracy
+        proximity: device.proximity,
+      rssi: parseInt(device.rssi),
+      distance: parseFloat(device.accuracy)
       };
       sendBeacon(beacon);
       beaconsCollection.push(beacon);
@@ -101,8 +101,8 @@ if (OS_IOS) {
       major: parseInt(e.major),
       minor: parseInt(e.minor),
       proximity: e.proximity,
-      rssi: e.rssi,
-      distance: e.accuracy
+      rssi: parseInt(e.rssi),
+      distance: parseFloat(e.accuracy)
     };
     sendBeacon(beacon);
   };
