@@ -38,5 +38,8 @@ $ titanium build [-p plattform] -T device
 ##Author
 Koji Wakayama
 
+##Contributors
+Johan Lauri
+
 ## License
 * [MIT](http://opensource.org/licenses/MIT)
