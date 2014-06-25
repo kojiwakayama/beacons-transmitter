@@ -11,10 +11,12 @@ if (OS_IOS) {
   var TiBeacons = require('org.beuckman.tibeacons');
 
   var enterRegion = function (e) {
+    var timestamp = new Date().getTime();
+
     var data = {
       tag: transmitterTag,
       event: 'enter-region',
-      timestamp: new Date().getTime(),
+      timestamp: timestamp,
       id: e.uuid+"-"+e.major+"-"+e.minor,
       identifier: e.identifier,
       uuid: e.uuid,
@@ -28,10 +30,12 @@ if (OS_IOS) {
   };
 
   var exitRegion = function (e) {
+    var timestamp = new Date().getTime();
+
     var data = {
       tag: transmitterTag,
       event: 'exit-region',
-      timestamp: new Date().getTime(),
+      timestamp: timestamp,
       id: e.uuid+"-"+e.major+"-"+e.minor,
       identifier: e.identifier,
       uuid: e.uuid,
@@ -45,10 +49,12 @@ if (OS_IOS) {
   };
 
   var updateRanges = function (e) {
+    var timestamp = new Date().getTime();
+
     var data = {
       tag: transmitterTag,
       event: 'update-ranges',
-      timestamp: new Date().getTime(),
+      timestamp: timestamp,
       id: e.uuid+"-"+e.major+"-"+e.minor,
       identifier: e.identifier,
       uuid: e.uuid,
@@ -62,10 +68,12 @@ if (OS_IOS) {
   };
 
   var handleProximity = function (e) {
+    var timestamp = new Date().getTime();
+
     var data = {
       tag: transmitterTag,
       event: 'handle-proximity',
-      timestamp: new Date().getTime(),
+      timestamp: timestamp,
       id: e.uuid+"-"+e.major+"-"+e.minor,
       identifier: e.identifier,
       uuid: e.uuid,
@@ -142,11 +150,13 @@ if (OS_ANDROID) {
   var iBeacon = require('miga.tibeacon');
 
   var onSuccess = function (e) {
+    var timestamp = new Date().getTime();
+
     e.devices.forEach(function(device) {
         var data = {
           tag: transmitterTag,
           event: 'on-success',
-          timestamp: new Date().getTime(),
+          timestamp: timestamp,
           id: device.uuid+"-"+device.major+"-"+device.minor,
           identifier: device.mac,
           uuid: device.uuid,
@@ -160,11 +170,13 @@ if (OS_ANDROID) {
   };
 
   var onRegion = function (e) {
+    var timestamp = new Date().getTime();
+
     var device = e.device,
         data = {
           tag: transmitterTag,
           event: 'on-region',
-          timestamp: new Date().getTime(),
+          timestamp: timestamp,
           id: device.uuid+"-"+device.major+"-"+device.minor,
           identifier: device.mac,
           uuid: device.uuid,
@@ -177,11 +189,13 @@ if (OS_ANDROID) {
   };
 
   var onFound = function (e) {
+    var timestamp = new Date().getTime();
+
     var device = e.device,
         data = {
           tag: transmitterTag,
           event: 'on-found',
-          timestamp: new Date().getTime(),
+          timestamp: timestamp,
           id: device.uuid+"-"+device.major+"-"+device.minor,
           identifier: device.mac,
           uuid: device.uuid,
