@@ -1,14 +1,14 @@
 <Alloy>
   <Window id="win">
     <View id="mainContainer">
-    <Label id="title" text="Beacons Transmitter"/>
+    <Label id="title" text="Creuna Tech Challenge 2014"/>
       <View class="inputContainer">
         <Label id="urlPortLabel">Url:Port</Label>
-        <TextField id="urlPortInput" hintText="e.g. 127.0.0.1:8000"/>
+        <TextField id="urlPortInput" hintText="e.g. 127.0.0.1:8000" value="10.6.9.114:8000"/>
       </View>
       <View class="inputContainer">
         <Label id="transmitterTagLabel">Tag</Label>
-        <TextField id="transmitterTagInput" hintText="e.g. transmitter id"/>
+        <TextField id="transmitterTagInput" hintText="email@creuna.se"/>
       </View>
       <View class="inputContainer">
       	<Switch id="monitoringSwitch" value="false" onChange="toggleMonitoring"/>
