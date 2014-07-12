@@ -43,4 +43,4 @@ Koji Wakayama
 Johan Lauri
 
 ## License
-[MIT](http://opensource.org/licenses/MIT)
+[MIT](http://kojiwakayama.mit-license.org)
